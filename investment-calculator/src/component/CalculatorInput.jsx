@@ -9,13 +9,18 @@ export default function CalculatorInput({
 
   function handleInputChange(event) {
     setInputValue(event.target.value);
-    onChangeInput(event.target.value);
+    onChangeInput(event);
   }
 
   return (
     <div id="user-input">
       <label>{inputLabel}</label>
-      <input value={inputValue} onChange={handleInputChange} name={inputName} />
+      <input
+        value={inputValue}
+        onChange={handleInputChange}
+        name={inputName}
+        type="number"
+      />
     </div>
   );
 }

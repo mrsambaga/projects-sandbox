@@ -2,10 +2,8 @@ import { useState } from "react";
 import logo from "./assets/investment-calculator-logo.png";
 import CalculatorInput from "./component/CalculatorInput";
 import ResultTable from "./component/ResultTable";
-import { calculateInvestmentResults } from "./util/investment";
 
 function App() {
-  const [annualData, setAnnualData] = useState([]);
   const [investmentInput, setInvestmentInput] = useState({
     initialInvestment: 0,
     annualInvestment: 0,
@@ -13,13 +11,11 @@ function App() {
     duration: 0,
   });
 
-  const newAnnualData = calculateInvestmentResults(investmentInput);
-
   function onInputChange(event) {
-    const { name, value } = event.target;
+    const { name, valueAsNumber } = event.target;
     const newInput = {
       ...investmentInput,
-      [name]: value,
+      [name]: valueAsNumber,
     };
     setInvestmentInput(newInput);
   }
@@ -53,7 +49,7 @@ function App() {
         ></CalculatorInput>
       </div>
       <div>
-        <ResultTable></ResultTable>
+        <ResultTable investmentInput={investmentInput} />
       </div>
     </>
   );
