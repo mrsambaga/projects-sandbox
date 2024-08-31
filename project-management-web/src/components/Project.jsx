@@ -6,13 +6,17 @@ import Input from "./Input";
 export default function Project({ activeProject }) {
   return (
     <div className="px-10 py-16 w-full">
-      <h1 className="text-3xl font-bold text-stone-600 mb-5">Learning React</h1>
-      <p className="text-stone-400 mb-4 font-bold text-lg">Dec 29, 2024</p>
-      <p className="text-stone-600 mb-4 font-bold text-lg">
-        Learn react from the group up.
+      <h1 className="text-3xl font-bold text-stone-600 mb-5">
+        {activeProject.title}
+      </h1>
+      <p className="text-stone-400 mb-4 font-bold text-lg">
+        {activeProject.date}
       </p>
       <p className="text-stone-600 mb-4 font-bold text-lg">
-        Start with the basics, finish with advanced knowledge.
+        {activeProject.description1}
+      </p>
+      <p className="text-stone-600 mb-4 font-bold text-lg">
+        {activeProject.description2}
       </p>
       <div className="border-t border-gray-300 my-4"></div>
       <h1 className="text-3xl font-bold text-stone-600 mb-5">Tasks</h1>
