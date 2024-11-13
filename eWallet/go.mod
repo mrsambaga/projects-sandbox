@@ -1,4 +1,4 @@
-module e-wallet
+module github.com/mrsambaga/projects-sandbox/eWallet
 
 go 1.22.4
 
