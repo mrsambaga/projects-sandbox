@@ -4,13 +4,14 @@ import (
 	"context"
 	"testing"
 
+	"github.com/mrsambaga/projects-sandbox/eWallet/util"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateAccount(t *testing.T) {
 	arg := CreateAccountParams{
-		Owner: "sam",
-		Balance: 100,
+		Owner: util.RandomOwner(),
+		Balance: util.RandomMoney(),
 		Currency: "USD",
 	}
 
