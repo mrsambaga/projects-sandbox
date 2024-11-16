@@ -62,5 +62,11 @@ func TestTransferTx(t *testing.T) {
 		require.NotEmpty(t, toEntry)
 		require.Equal(t, receiver.ID, toEntry.AccountID)
 		require.Equal(t, amount, toEntry.Amount)
+
+		receiverBalanceDiff := sender.Balance - results.FromAccount.Balance
+		senderBalanceDiff := results.ToAccount.Balance - sender.Balance
+		require.Equal(t, receiverBalanceDiff, -senderBalanceDiff)
+		require.True(t, receiverBalanceDiff > 0)
+		require.True(t, senderBalanceDiff < 0)
 	}
 }
