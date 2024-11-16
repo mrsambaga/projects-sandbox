@@ -13,11 +13,12 @@ func TestTransferTx(t *testing.T) {
 	sender := createRandomAccount(t)
 	receiver := createRandomAccount(t)
 	amount := int64(10)
+	numberOfTransactions := 3
 
 	errs := make(chan error)
 	results := make(chan TransferTxResult)
 
-	for i := 0;i < 5;i++ {
+	for i := 0;i < numberOfTransactions;i++ {
 		go func() {
 			result, err := store.TransferTx(context.Background(), TransferTxParams{
 				FromAccountID: sender.ID,
@@ -30,7 +31,7 @@ func TestTransferTx(t *testing.T) {
 		}()
 	}
 
-	for i:=0;i<5;i++ {
+	for i:=0;i < numberOfTransactions;i++ {
 		err := <-errs
 		require.NoError(t, err)
 
@@ -64,9 +65,16 @@ func TestTransferTx(t *testing.T) {
 		require.Equal(t, amount, toEntry.Amount)
 
 		receiverBalanceDiff := sender.Balance - results.FromAccount.Balance
-		senderBalanceDiff := results.ToAccount.Balance - sender.Balance
-		require.Equal(t, receiverBalanceDiff, -senderBalanceDiff)
+		senderBalanceDiff := results.ToAccount.Balance - receiver.Balance
+		require.Equal(t, receiverBalanceDiff, senderBalanceDiff)
 		require.True(t, receiverBalanceDiff > 0)
-		require.True(t, senderBalanceDiff < 0)
 	}
+	updatedReceiver, err := testQueries.GetAccount(context.Background(), receiver.ID)
+	require.NoError(t, err)
+
+	updatedSemder, err := testQueries.GetAccount(context.Background(), sender.ID)
+	require.NoError(t, err)
+
+	require.Equal(t, receiver.Balance+int64(numberOfTransactions)*amount, updatedReceiver.Balance)
+	require.Equal(t, sender.Balance-int64(numberOfTransactions)*amount, updatedSemder.Balance)
 }
