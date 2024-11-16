@@ -40,7 +40,22 @@ func TestTransferTx(t *testing.T) {
 		_, err = store.GetTransfer(context.Background(), results.Transfer.ID)
 		require.NoError(t, err)
 
+		transfer := results.Transfer
+		require.NotNil(t, transfer)
+		require.Equal(t, sender.ID, transfer.FromAccountID)
+		require.Equal(t, receiver.ID, transfer.ToAccountID)
+		require.NotZero(t, transfer.Amount)
+		require.NotZero(t, transfer.CreatedAt)
+
 		_, err = store.GetEntry(context.Background(), results.FromEntry.ID)
+		require.NoError(t, err)
+
+		fromEntry := results.FromEntry
+		require.NotNil(t, fromEntry)
+		require.Equal(t, sender.ID, fromEntry.AccountID)
+		require.Equal(t, amount, fromEntry.Amount)
+
+		_, err = store.GetEntry(context.Background(), results.ToEntry.ID)
 		require.NoError(t, err)
 
 		toEntry := results.ToEntry
