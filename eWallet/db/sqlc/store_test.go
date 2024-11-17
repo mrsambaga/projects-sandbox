@@ -13,7 +13,7 @@ func TestTransferTx(t *testing.T) {
 	sender := createRandomAccount(t)
 	receiver := createRandomAccount(t)
 	amount := int64(10)
-	numberOfTransactions := 3
+	numberOfTransactions := 5
 
 	errs := make(chan error)
 	results := make(chan TransferTxResult)
