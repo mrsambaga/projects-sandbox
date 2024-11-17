@@ -112,20 +112,20 @@ func transferMoney(
 		})
 		
 		return
-	} else {
-		toAccount, err = query.AddAccountBalance(ctx, AddAccountBalanceParams{
-			ID: arg.ToAccountID,
-			Amount: -arg.Ammount,
-		})
-		if err != nil {
-			return
-		}
-
-		fromAccount, err = query.AddAccountBalance(ctx, AddAccountBalanceParams{
-			ID: arg.FromAccountID,
-			Amount: arg.Ammount,
-		})
-
+	} 
+	
+	toAccount, err = query.AddAccountBalance(ctx, AddAccountBalanceParams{
+		ID: arg.ToAccountID,
+		Amount: -arg.Ammount,
+	})
+	if err != nil {
 		return
 	}
+
+	fromAccount, err = query.AddAccountBalance(ctx, AddAccountBalanceParams{
+		ID: arg.FromAccountID,
+		Amount: arg.Ammount,
+	})
+
+	return
 }
