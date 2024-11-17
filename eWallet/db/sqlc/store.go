@@ -81,24 +81,47 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		result.FromAccount, err = q.AddAccountBalance(context.Background(), AddAccountBalanceParams{
-			ID: arg.FromAccountID,
-			Amount: -arg.Ammount,
-		})
-		if err != nil {
-			return err
-		}
-
-		result.ToAccount, err = q.AddAccountBalance(context.Background(), AddAccountBalanceParams{
-			ID: arg.ToAccountID,
-			Amount: arg.Ammount,
-		})
-		if err != nil {
-			return err
+		if (arg.FromAccountID < arg.ToAccountID) {
+			result.FromAccount, result.ToAccount, err = transferMoney(context.Background(), q, arg)
+			if err != nil {
+				return nil
+			}
+		} else {
+			result.FromAccount, result.ToAccount, err = transferMoney(context.Background(), q, TransferTxParams{
+				FromAccountID: arg.ToAccountID,
+				ToAccountID: arg.FromAccountID,
+				Ammount: -arg.Ammount,
+			})
+			if err != nil {
+				return nil
+			}
 		}
 
 		return nil
 	})
 
+	
+
 	return result, err
+}
+
+func transferMoney(
+	ctx context.Context,
+	queries *Queries,
+	arg TransferTxParams,
+) (fromAccount Account, toAccount Account, err error) {
+	fromAccount, err = queries.AddAccountBalance(ctx, AddAccountBalanceParams{
+		ID: arg.FromAccountID,
+		Amount: -arg.Ammount,
+	})
+	if err != nil {
+		return
+	}
+
+	toAccount, err = queries.AddAccountBalance(ctx, AddAccountBalanceParams{
+		ID: arg.ToAccountID,
+		Amount: arg.Ammount,
+	})
+
+	return
 }
