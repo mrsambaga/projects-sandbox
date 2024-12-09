@@ -1,0 +1,7 @@
+on:
+  push:
+    paths:
+      - "eWallet/**"
+  pull_request:
+    paths:
+      - "eWallet/**"
