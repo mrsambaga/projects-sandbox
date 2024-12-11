@@ -6,25 +6,22 @@ import (
 	"os"
 	"testing"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-)
-
-const (
-	dbDriver = "postgres"
+	"github.com/mrsambaga/projects-sandbox/eWallet/util"
 )
 
 var (
 	testQueries *Queries
-	dbSource string
 	testDB *sql.DB
 )
 
 func TestMain(m *testing.M) {
-	loadEnv()
-	var err error
+	config, err := util.LoadConfig(".");
+	if err != nil {
+		log.Fatal("Error getting env: ", err)
+	}
 
-	testDB, err = sql.Open(dbDriver, dbSource)
+	testDB, err = sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db:", err)
 	}
@@ -32,13 +29,4 @@ func TestMain(m *testing.M) {
 	testQueries = New(testDB)
 
 	os.Exit(m.Run())
-}
-
-func loadEnv() {	
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	dbSource = os.Getenv("DB_URL")
 }

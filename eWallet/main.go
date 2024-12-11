@@ -3,28 +3,20 @@ package main
 import (
 	"database/sql"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/mrsambaga/projects-sandbox/eWallet/api"
 	db "github.com/mrsambaga/projects-sandbox/eWallet/db/sqlc"
-)
-
-const (
-	dbDriver = "postgres"
-	serverAddress = "0.0.0.0:8080"
-)
-
-var (
-	dbSource string
+	"github.com/mrsambaga/projects-sandbox/eWallet/util"
 )
 
 func main() {
-	loadEnv()
-	var err error
+	config, err := util.LoadConfig(".");
+	if err != nil {
+		log.Fatal("Failed getting env file: ", err)
+	}
 
-	conn, err := sql.Open(dbDriver, dbSource)
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("Cannot connect to db:", err)
 	}
@@ -32,17 +24,8 @@ func main() {
 	store := db.NewStore(conn)
 	server := api.NewServer(store)
 
-	err = server.Start(serverAddress)
+	err = server.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatal("cannot start server:", err)
 	}
-}
-
-func loadEnv() {	
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	dbSource = os.Getenv("DB_URL")
 }
