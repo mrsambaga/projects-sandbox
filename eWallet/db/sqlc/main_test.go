@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"github.com/mrsambaga/projects-sandbox/eWallet/util"
 )
@@ -16,6 +17,8 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	gin.SetMode(gin.TestMode)
+
 	config, err := util.LoadConfig("../..");
 	if err != nil {
 		log.Fatal("Error getting env: ", err)
